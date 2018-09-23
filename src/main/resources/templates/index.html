@@ -13,23 +13,24 @@
 <div class="container-fluid" style="margin-top: 20px">
     <div class="row">
         <div class="col col-md-6 offset-md-3">
-            <div class="card">
-
+            <div class="card bg-primary">
                 <div class="card-header">
-                    <h1 class="card-title">My Recipes!</h1>
+                    <h1 class="card-title text-white">My Recipes!</h1>
                 </div>
-                <div class="card-body">
+                <div class="card-body bg-light">
                     <div class="table-responsive" th:if="${not #lists.isEmpty(recipes)}">
                         <table class="table table-hover">
-                            <thead class="thead-dark">
+                            <thead class="thead-light">
                             <tr>
                                 <th>ID</th>
                                 <th>Description</th>
+                                <th>View</th>
                             </tr>
                             </thead>
                             <tr th:each="recipe : ${recipes}">
                                 <td th:text="${recipe.id}">123</td>
                                 <td th:text="${recipe.description}">Tasty</td>
+                                <td><a href="#" th:href="@{'recipe/view/' + ${recipe.id}}">View</a></td>
                             </tr>
                         </table>
                     </div>
