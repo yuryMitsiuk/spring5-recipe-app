@@ -1,5 +1,6 @@
 package guru.springframework.spring5recipeapp.services;
 
+import guru.springframework.spring5recipeapp.commands.RecipeCommand;
 import guru.springframework.spring5recipeapp.converters.recipe.RecipeCommandToRecipe;
 import guru.springframework.spring5recipeapp.converters.recipe.RecipeToRecipeCommand;
 import guru.springframework.spring5recipeapp.domain.Recipe;
@@ -11,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -57,5 +59,40 @@ public class RecipeServiceImplTest {
         when(recipeRepository.findAll()).thenReturn(recipes);
         assertEquals(recipeService.getAll().size(), 1);
         verify(recipeRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void findCommandById() {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        Optional<Recipe> optionalRecipe = Optional.of(recipe);
+        when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
+
+        RecipeCommand command = new RecipeCommand();
+        command.setId(1L);
+        when(recipeToCommand.convert(any())).thenReturn(command);
+
+        RecipeCommand foundCommand = recipeService.findCommandById(1L);
+
+        assertNotNull(foundCommand);
+        assertEquals(foundCommand.getId(), recipe.getId());
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void getRecipesTest() throws Exception {
+
+        Recipe recipe = new Recipe();
+        HashSet receipesData = new HashSet();
+        receipesData.add(recipe);
+
+        when(recipeRepository.findAll()).thenReturn(receipesData);
+
+        Set<Recipe> recipes = recipeService.getAll();
+
+        assertEquals(recipes.size(), 1);
+        verify(recipeRepository, times(1)).findAll();
+        verify(recipeRepository, never()).findById(anyLong());
     }
 }
