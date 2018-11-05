@@ -95,4 +95,12 @@ public class RecipeServiceImplTest {
         verify(recipeRepository, times(1)).findAll();
         verify(recipeRepository, never()).findById(anyLong());
     }
+
+    @Test
+    public void deleteById() {
+        Long id = 2L;
+        recipeService.delete(id);
+
+        verify(recipeRepository, times(1)).deleteById(anyLong());
+    }
 }
