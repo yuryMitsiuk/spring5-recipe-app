@@ -1,11 +1,14 @@
 package guru.springframework.spring5recipeapp.services;
 
 import guru.springframework.spring5recipeapp.commands.IngredientCommand;
+import guru.springframework.spring5recipeapp.converters.ingredient.IngredientCommandToIngredient;
 import guru.springframework.spring5recipeapp.converters.ingredient.IngredientToIngredientCommand;
+import guru.springframework.spring5recipeapp.converters.unitOfMeasure.UnitOfMeasureCommandToUnitOfMeasure;
 import guru.springframework.spring5recipeapp.converters.unitOfMeasure.UnitOfMeasureToUnitOfMeasureCommand;
 import guru.springframework.spring5recipeapp.domain.Ingredient;
 import guru.springframework.spring5recipeapp.domain.Recipe;
 import guru.springframework.spring5recipeapp.repositories.RecipeRepository;
+import guru.springframework.spring5recipeapp.repositories.UnitOfMeasureRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,8 +25,10 @@ import static org.mockito.Mockito.when;
 public class IngredientServiceImplTest {
 
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
+    private final IngredientCommandToIngredient toIngredient;
 
     public IngredientServiceImplTest() {
+        this.toIngredient = new IngredientCommandToIngredient(new UnitOfMeasureCommandToUnitOfMeasure());
         this.ingredientToIngredientCommand = new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand());
     }
 
@@ -32,10 +37,13 @@ public class IngredientServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    @Mock
+    UnitOfMeasureRepository unitOfMeasureRepository;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        ingredientService = new IngredientServiceImpl(recipeRepository, ingredientToIngredientCommand);
+        ingredientService = new IngredientServiceImpl(recipeRepository, ingredientToIngredientCommand, unitOfMeasureRepository, toIngredient);
     }
 
     @Test
