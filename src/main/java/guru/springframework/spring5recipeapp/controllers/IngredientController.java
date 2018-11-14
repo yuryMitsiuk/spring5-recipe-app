@@ -1,6 +1,8 @@
 package guru.springframework.spring5recipeapp.controllers;
 
 import guru.springframework.spring5recipeapp.commands.IngredientCommand;
+import guru.springframework.spring5recipeapp.commands.RecipeCommand;
+import guru.springframework.spring5recipeapp.commands.UnitOfMeasureCommand;
 import guru.springframework.spring5recipeapp.services.IngredientService;
 import guru.springframework.spring5recipeapp.services.RecipeService;
 import guru.springframework.spring5recipeapp.services.UnitOfMeasureService;
@@ -46,6 +48,21 @@ public class IngredientController {
     @GetMapping("recipe/{recipeId}/ingredient/{ingredientId}/update")
     public String update(@PathVariable String recipeId, @PathVariable String ingredientId, Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(ingredientId)));
+        model.addAttribute("uomList", unitOfMeasureService.getAll());
+        return "recipe/ingredient/ingredientform";
+    }
+
+    @GetMapping("recipe/{recipeId}/ingredient/new")
+    public String create(@PathVariable String recipeId, Model model) {
+        //make sure we have a good id value
+        RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(recipeId));
+
+        //todo raise exception if null
+
+        IngredientCommand command = new IngredientCommand();
+        command.setRecipeId(Long.valueOf(recipeId));
+        command.setUom(new UnitOfMeasureCommand());
+        model.addAttribute("ingredient", command);
         model.addAttribute("uomList", unitOfMeasureService.getAll());
         return "recipe/ingredient/ingredientform";
     }
