@@ -4,6 +4,7 @@ import guru.springframework.spring5recipeapp.domain.Recipe;
 import guru.springframework.spring5recipeapp.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class ImageServiceImpl implements ImageService {
         this.recipeRepository = recipeRepository;
     }
 
+    @Transactional
     @Override
     public void save(Long recipeId, MultipartFile file) {
         Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
